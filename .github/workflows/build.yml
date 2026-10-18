@@ -20,15 +20,17 @@ jobs:
         run: |
           mkdir -p build/SettingsClone.app
 
-          # Kompilasi file Swift menjadi binary ARM64 iOS
+          # Kompilasi file Swift dari dalam folder Sources
           swiftc -sdk $(xcrun --sdk iphoneos --show-sdk-path) \
                  -target arm64-apple-ios15.0 \
                  -emit-executable \
                  -o build/SettingsClone.app/SettingsClone \
-                 App.swift ContentView.swift
+                 Sources/App.swift Sources/ContentView.swift
 
-          # Salin Info.plist ke dalam .app bundle
-          cp Info.plist build/SettingsClone.app/Info.plist
+          # Salin Info.plist jika ada
+          if [ -f "Info.plist" ]; then
+            cp Info.plist build/SettingsClone.app/Info.plist
+          fi
 
       - name: Package into IPA
         run: |
